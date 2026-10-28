@@ -8,7 +8,7 @@ WITH stock AS (
 )
 SELECT b.title, c.name AS category,
        s.on_hand,
-       ROUND(s.on_hand * (SELECT AVG(m.unit_cost_cents)
+       ROUND(s.on_hand * (SELECT SUM(m.quantity_change * m.unit_cost_cents) * 1.0 / SUM(m.quantity_change)
                           FROM inventory_movements m
                           WHERE m.book_id = b.book_id
                             AND m.movement_type = 'purchase_receipt') / 100.0, 2) AS stock_value_at_cost
@@ -19,7 +19,7 @@ WHERE b.book_id NOT IN (
     SELECT i.book_id
     FROM order_items i
     JOIN orders o ON o.order_id = i.order_id
-    WHERE o.status <> 'cancelled'
+    WHERE o.status = 'completed'
 )
 ORDER BY stock_value_at_cost DESC, b.title;
 
