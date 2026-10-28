@@ -26,7 +26,7 @@ Choices worth knowing:
 Deletes `bookstore.db`, builds it from `schema.sql`, and fills it with made-up data: 60 authors, 8 categories, 6 suppliers, 160 books, 450 customers, 2,000 orders (3,186 lines) and 3,389 stock movements. Orders run from 2024-01-01 to 2025-12-31.
 
 - It uses `random.Random(42)`, so every run gives the same data.
-- At the end it checks itself: integrity check, foreign key check, row counts, no negative stock, no empty orders. It stops with an error if one check fails.
+- At the end it checks itself: integrity check, foreign key check, row counts, final stock not negative, no empty orders. It stops with an error if one check fails.
 
 ## run_queries.py
 
@@ -58,7 +58,7 @@ Together they use joins, CTEs, window functions, `HAVING` and subqueries. Querie
 
 ## README.md
 
-The front page: what the project is, how to run it, the ER diagram, why the design is in third normal form, what the schema does and does not enforce, the PostgreSQL differences, how AI helped, what broke and how it was fixed, the limits, and the real output of all 20 queries. The query sections are generated from the `.sql` files, so they match the files.
+The front page: what the project is, how to run it, the ER diagram, why the design is in third normal form, what the schema does and does not enforce, the PostgreSQL differences, how AI helped, what broke and how it was fixed, the limits, and the real output of all 20 queries. The query sections were copied from the `.sql` files, so after you change a query, update its section by hand.
 
 ## PRACTICE.md and PRACTICE_ANSWERS.md
 
@@ -87,7 +87,7 @@ run.ps1 = seed.py, then run_queries.py
 - The design: eight tables in third normal form. Names live once. Stock comes from a ledger, so it cannot disagree with the movements.
 - Money is in cents, to avoid float errors. Dates are ISO text, so they sort.
 - The constraints do real work: foreign keys, `CHECK`, `STRICT`, partial unique indexes, and a composite foreign key from the ledger to the order line.
-- What the schema does not enforce (a sale on a cancelled order, stock below zero) needs a trigger. I did not write one. The queries filter on status and the seed script asserts no negative stock.
+- What the schema does not enforce (a sale on a cancelled order, stock below zero) needs a trigger. I did not write one. The queries filter on status and the seed script only asserts that final stock is not negative.
 - The data is synthetic and seeded, so results are repeatable but say nothing about real shops.
 - I have not run any of this on PostgreSQL. The README lists what would change.
 - An AI review of the first schema found real problems, and I fixed them. Some of the first one-line readings were wrong, and I fixed those by comparing them with the printed output.

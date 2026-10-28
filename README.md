@@ -34,7 +34,7 @@ erDiagram
     authors ||--o{ books : writes
     categories ||--o{ books : groups
     customers ||--o{ orders : places
-    orders ||--|{ order_items : contains
+    orders ||--o{ order_items : contains
     books ||--o{ order_items : "sold as"
     books ||--o{ inventory_movements : "stock moves"
     suppliers |o--o{ inventory_movements : supplies
@@ -113,7 +113,7 @@ Every non-key column depends on the key, the whole key, and nothing but the key.
 
 Enforced by the database: primary keys, foreign keys (`ON DELETE RESTRICT`), `NOT NULL`, `UNIQUE` (emails are case-insensitive), `CHECK` on status, channel, positive quantity and price, valid dates, 13-digit ISBN, and one `CHECK` per movement type. Partial unique indexes allow one sale and one return per order line.
 
-Not enforced (it needs a trigger, which I did not write): a sale only on a non-cancelled order, a return only on a `returned` order, and stock never below zero. The queries filter on `orders.status` instead, and `seed.py` asserts that no stock goes negative.
+Not enforced (it needs a trigger, which I did not write): a sale only on a non-cancelled order, a return only on a `returned` order, a return dated on or after its sale, a `returned` order that has a return row, an order with at least one line, and stock never below zero. The queries filter on `orders.status` instead. `seed.py` asserts that the final stock of every book is not negative. It does not check the running balance on each day, which can dip below zero in the seed data because a return is dated days after its sale.
 
 ## Differences for PostgreSQL
 
@@ -143,7 +143,7 @@ I used an AI coding assistant to draft the schema, `seed.py`, the 20 queries and
 - Foreign keys used `CASCADE`, which would silently delete order history. Changed to `RESTRICT`.
 - Emails were case-sensitive, so `A@x.com` and `a@x.com` counted as different customers. Fixed with `COLLATE NOCASE`.
 - A price expression in `seed.py` was garbled. Rewritten.
-- Writing the 20 query files from a shell here-document failed. The files are now generated from a Python script.
+- Writing the 20 query files from a shell here-document failed. I wrote them another way, and they are plain `.sql` files in `queries/`.
 - The readings for Q03 and Q16 did not match their output. Both were rewritten against the real output.
 - There is no `sqlite3` command-line tool on this machine, so every query runs through Python's `sqlite3` module.
 
@@ -152,7 +152,7 @@ I used an AI coding assistant to draft the schema, `seed.py`, the 20 queries and
 - The data is synthetic and random in places, so patterns in the results come from the generator, not from real shoppers. Do not read them as business facts.
 - Sample output is the first 10 rows of each query. The total row count is stated in each block.
 - Tested on one machine: Windows, Python 3.12.10, SQLite 3.49.1. Not tested on Linux or macOS, and not tested on PostgreSQL.
-- No triggers and no stored procedures. The only automated checks are the ones in `seed.py` (integrity check, foreign key check, row counts, no negative stock, no empty orders) and the fact that every query runs.
+- No triggers and no stored procedures. The only automated checks are the ones in `seed.py` (integrity check, foreign key check, row counts, final stock not negative, no empty orders) and the fact that every query runs.
 - Amounts are shown in currency units (cents divided by 100). No currency is named.
 
 ## The 20 questions and their real output
