@@ -1,5 +1,5 @@
 -- Q01. How much did the shop earn each month, what is the running total, and how did each month change from the one before?
--- Reading: Revenue peaked at 2353.57 in 2024-06 (+57.7% on May) and the running total reached 15614.43 by 2024-10.
+-- Reading: Monthly revenue grows from 967.30 in 2024-01 to 10095.46 in 2025-12, with the biggest jump in 2025-11 (+83.3%); the running total ends at 81263.93.
 
 WITH monthly AS (
     SELECT substr(o.ordered_on, 1, 7) AS month,

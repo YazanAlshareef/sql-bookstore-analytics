@@ -1,5 +1,5 @@
 -- Q03. What are the 3 best-selling books (by revenue) inside each category?
--- Reading: Each category has a clear leader; in Cooking the top book (3107.15) earns almost four times the second (825.34).
+-- Reading: Cooking's top book (3107.15) earns almost four times the second (825.34); Children is the closest race (529.14 against 500.49).
 
 WITH book_rev AS (
     SELECT c.name AS category, b.title,
