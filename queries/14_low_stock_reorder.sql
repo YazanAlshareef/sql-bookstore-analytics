@@ -1,5 +1,5 @@
 -- Q14. Which books will run out first, based on the last 90 days of sales?
--- Reading: The Last River and The Salt River have about 8 days of stock left at the 90-day sales pace, so reorder these first.
+-- Reading: As of the last order date (2025-12-31), The Last River and The Salt River have about 8 days of stock left at the 90-day sales pace, so reorder these first.
 
 WITH today AS (
     SELECT MAX(ordered_on) AS d FROM orders

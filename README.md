@@ -113,7 +113,7 @@ Every non-key column depends on the key, the whole key, and nothing but the key.
 
 Enforced by the database: primary keys, foreign keys (`ON DELETE RESTRICT`), `NOT NULL`, `UNIQUE` (emails are case-insensitive), `CHECK` on status, channel, positive quantity and price, valid dates, 13-digit ISBN, and one `CHECK` per movement type. Partial unique indexes allow one sale and one return per order line.
 
-Not enforced (it needs a trigger, which I did not write): a sale only on a non-cancelled order, a return only on a `returned` order, a return dated on or after its sale, a `returned` order that has a return row, an order with at least one line, and stock never below zero. The queries filter on `orders.status` instead. `seed.py` asserts that the final stock of every book is not negative. It does not check the running balance on each day, which can dip below zero in the seed data because a return is dated days after its sale.
+Not enforced (it needs a trigger, which I did not write): a sale only on a non-cancelled order, a return only on a `returned` order, a return dated on or after its sale, a `returned` order that has a return row, an order with at least one line, an order dated on or after its customer's signup (`ordered_on >= joined_on`), and stock never below zero. The queries filter on `orders.status` instead. `seed.py` asserts that the final stock of every book is not negative. It does not check the running balance on each day, which can dip below zero in the seed data because a return is dated days after its sale.
 
 ## Differences for PostgreSQL
 
@@ -143,9 +143,7 @@ I used an AI coding assistant to draft the schema, `seed.py`, the 20 queries and
 - Foreign keys used `CASCADE`, which would silently delete order history. Changed to `RESTRICT`.
 - Emails were case-sensitive, so `A@x.com` and `a@x.com` counted as different customers. Fixed with `COLLATE NOCASE`.
 - A price expression in `seed.py` was garbled. Rewritten.
-- Writing the 20 query files from a shell here-document failed. I wrote them another way, and they are plain `.sql` files in `queries/`.
 - The readings for Q03 and Q16 did not match their output. Both were rewritten against the real output.
-- There is no `sqlite3` command-line tool on this machine, so every query runs through Python's `sqlite3` module.
 
 ## Limits
 
@@ -409,7 +407,7 @@ The Hollow River      Children         34       138.04
 
 ### Q14. Which books will run out first, based on the last 90 days of sales?
 
-Reading: The Last River and The Salt River have about 8 days of stock left at the 90-day sales pace, so reorder these first.
+Reading: As of the last order date (2025-12-31), The Last River and The Salt River have about 8 days of stock left at the 90-day sales pace, so reorder these first.
 
 SQL: [`queries/14_low_stock_reorder.sql`](queries/14_low_stock_reorder.sql). Output (first 10 of 15 rows, seed 42 data):
 
@@ -500,7 +498,7 @@ full price  2505         2914   1.163               70567.86
 
 ### Q19. For the best-selling book, what does the first part of its stock ledger look like, with running stock after each movement?
 
-Reading: The ledger starts with a 32-copy receipt and every sale or return moves stock_after by exactly its quantity_change.
+Reading: The best seller is The Last River: 320 copies sold on completed orders, 295 ledger movements in all, and 9 copies on hand at the end.
 
 SQL: [`queries/19_stock_ledger_best_seller.sql`](queries/19_stock_ledger_best_seller.sql). Output (first 10 of 20 rows, seed 42 data):
 

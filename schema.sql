@@ -1,4 +1,7 @@
 -- schema.sql: independent bookstore, SQLite first, PostgreSQL where practical.
+-- Third normal form: every non-key column depends on the key, the whole key, and nothing but the key.
+-- Names live once (authors, categories, suppliers). Stock on hand is not stored: it is the sum of inventory_movements.quantity_change.
+-- order_items.unit_price_cents is the price paid that day, a historical fact, so it is not a copy of books.list_price_cents.
 -- Money is stored as integer cents. Dates are ISO text 'YYYY-MM-DD'.
 -- Run with PRAGMA foreign_keys = ON (SQLite turns it off per connection by default).
 -- Tables are STRICT (SQLite 3.37+) so a text value cannot slip into an INTEGER column.

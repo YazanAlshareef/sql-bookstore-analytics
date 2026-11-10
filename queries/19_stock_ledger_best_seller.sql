@@ -1,5 +1,5 @@
 -- Q19. For the best-selling book, what does the first part of its stock ledger look like, with running stock after each movement?
--- Reading: The ledger starts with a 32-copy receipt and every sale or return moves stock_after by exactly its quantity_change.
+-- Reading: The best seller is The Last River: 320 copies sold on completed orders, 295 ledger movements in all, and 9 copies on hand at the end.
 
 SELECT m.moved_on, m.movement_type, m.quantity_change,
        SUM(m.quantity_change) OVER (ORDER BY m.moved_on, m.movement_id) AS stock_after

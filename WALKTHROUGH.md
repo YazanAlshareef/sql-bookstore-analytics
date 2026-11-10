@@ -56,6 +56,29 @@ Twenty files, one business question each. Each file has:
 
 Together they use joins, CTEs, window functions, `HAVING` and subqueries. Queries that count revenue or units count only orders whose status is `completed`, because the schema does not stop a cancelled order from having lines.
 
+The files:
+
+- `01_monthly_revenue.sql`: How much did the shop earn each month, what is the running total, and how did each month change from the one before?
+- `02_top_books_by_revenue.sql`: Which 10 books earn the most revenue?
+- `03_top3_books_per_category.sql`: What are the 3 best-selling books (by revenue) inside each category?
+- `04_category_revenue_share.sql`: What share of total revenue does each category bring, and how fast does the cumulative share build up?
+- `05_prolific_authors.sql`: Which authors have at least 3 different titles sold and at least 40 units sold in total?
+- `06_top_customers.sql`: Who are the 10 biggest customers, and what share of all revenue do they bring?
+- `07_repeat_customers.sql`: How many customers bought once, twice, or three or more times?
+- `08_customers_without_orders.sql`: Which cities have customers who signed up but never completed an order?
+- `09_order_value_by_channel.sql`: What is the average, smallest and largest order value for in-store and online orders?
+- `10_days_between_orders.sql`: Which frequent customers (4+ completed orders) come back the fastest, measured by average days between orders?
+- `11_new_vs_returning.sql`: Each month, how many buying customers are new (first completed order that month) and how many are returning?
+- `12_cancel_and_return_rate.sql`: What share of orders is cancelled or returned, by year and channel?
+- `13_books_never_sold.sql`: Which books never sold, how many copies sit on the shelf, and what is that stock worth at cost?
+- `14_low_stock_reorder.sql`: Which books will run out first, based on the last 90 days of sales?
+- `15_supplier_spend.sql`: How much did the shop spend with each supplier, and how do suppliers rank?
+- `16_margin_by_category.sql`: What gross margin does each category earn, using the average purchase cost of each book?
+- `17_books_bought_together.sql`: Which pairs of books are most often in the same completed order?
+- `18_discount_impact.sql`: Do discounted order lines (below list price) carry more copies per line than full-price lines?
+- `19_stock_ledger_best_seller.sql`: For the best-selling book, what does the first part of its stock ledger look like, with running stock after each movement?
+- `20_signup_cohorts.sql`: For each signup quarter, how many customers joined, how many went on to buy, and how much did the average member spend?
+
 ## README.md
 
 The front page: what the project is, how to run it, the ER diagram, why the design is in third normal form, what the schema does and does not enforce, the PostgreSQL differences, how AI helped, what broke and how it was fixed, the limits, and the real output of all 20 queries. The query sections were copied from the `.sql` files, so after you change a query, update its section by hand.

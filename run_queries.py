@@ -26,7 +26,7 @@ def table(cols, rows):
 def main(argv):
     write = "--write-samples" in argv
     wanted = [a for a in argv if not a.startswith("--")]
-    conn = sqlite3.connect(f"file:{ROOT / 'bookstore.db'}?mode=ro", uri=True)
+    conn = sqlite3.connect((ROOT / "bookstore.db").as_uri() + "?mode=ro", uri=True)
     conn.execute("PRAGMA foreign_keys = ON")
     failed = 0
     for path in sorted((ROOT / "queries").glob("*.sql")):
